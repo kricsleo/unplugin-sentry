@@ -15,10 +15,13 @@
   },
   "keywords": [
     "unplugin",
+    "plugin",
     "vite",
     "webpack",
     "rollup",
-    "transform"
+    "nuxt",
+    "sentry",
+    "sourcemap"
   ],
   "exports": {
     ".": {
