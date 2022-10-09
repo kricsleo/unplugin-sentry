@@ -38,17 +38,17 @@ export interface Options extends SentryCliOptions {
    */
   deploy?: DeployOptions
   /**
-   * If delete local sourcemap after uploaded,
+   * If delete local sourcemap after the upload,
    * @default true
    */
-  clean?: boolean
+  cleanLocal?: boolean
   /**
-   * If delete remote previous sourcemap in Sentry under the same `release`
+   * If Remove all the artifacts in the release before the upload.
    * @default true
    */
-  delete?: boolean
+  cleanArtifacts?: boolean
   /**
-   * If finalize a release after uploaded
+   * If finalize a release after the upload
    * @default true
    */
   finalize?: boolean
@@ -60,6 +60,11 @@ export interface Options extends SentryCliOptions {
    * Commits configs
    */
   commits?: SentryCliCommitsOptions
+  /**
+   * If attempts a dry run
+   * @default false
+   */
+  dryRun?: boolean
 }
 
 export interface SourcemapOptions extends Omit<SentryCliUploadSourceMapsOptions, 'include'> {
