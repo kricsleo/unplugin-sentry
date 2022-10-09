@@ -1,5 +1,4 @@
 import { normalize } from 'path'
-import type { OutputOptions } from 'rollup'
 import type { UnpluginOptions } from 'unplugin'
 import { uploadSourcemap } from './sentry'
 import type { Options } from './types'
