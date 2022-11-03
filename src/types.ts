@@ -70,12 +70,12 @@ export interface Options extends SentryCliOptions {
 export interface SourcemapOptions extends Omit<SentryCliUploadSourceMapsOptions, 'include'> {
   /**
    * Sourcemap paths
-   * @default [`./${vite.build.outDir}/${vite.build.assetsDir}`]
+   * Auto-detect(May failed, then you should provide it yourself)
    */
   include?: SentryCliUploadSourceMapsOptions['include']
   /**
    * !IMPORTANT!: MUST START WITH `~/`
-   * @default `~${vite.env.BASE_URL}assets/`
+   * Auto-detect(May failed, then you should provide it yourself)
    */
   urlPrefix?: SentryCliUploadSourceMapsOptions['urlPrefix']
 }
@@ -83,7 +83,7 @@ export interface SourcemapOptions extends Omit<SentryCliUploadSourceMapsOptions,
 export interface DeployOptions extends Omit<SentryCliNewDeployOptions, 'env'> {
   /**
    * Environment
-   * @default `vite.mode`
+   * Auto-detect(Fallback to 'process.env.NODE_ENV', may failed, then you should provide it yourself)
    */
   env?: SentryCliNewDeployOptions['env']
 }

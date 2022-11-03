@@ -6,7 +6,10 @@ import { options } from '../../local.test'
 export default defineConfig({
   plugins: [
     Inspect(),
-    Unplugin(options),
+    {
+      ...Unplugin(options),
+      apply: 'serve'
+    },
   ],
   build: {
     sourcemap: true,

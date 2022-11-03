@@ -34,9 +34,12 @@ export default {
       template: Path.resolve(_dirname, '../src/index.html'),
     }),
     Unplugin({
+      url: 'https://sentry.io/',
+      org: 'kricsleo',
       project: 'demo',
-      org: 'sentry',
       cleanLocal: false,
+      deploy: { env: 'production'},
+      authToken: 'a38a7e0a606045a1ab35ce877f53975684db943b9c424bb18925db86993dab05'
     }),
   ],
   resolve: {

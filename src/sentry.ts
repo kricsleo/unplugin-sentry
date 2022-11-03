@@ -8,43 +8,49 @@ import type { Options } from './types'
  * Upload sourcemap with SentryCli
  */
 export async function uploadSourcemap(options: Options) {
-  const { sourcemap, commits, cleanLocal, cleanArtifacts, finalize, deploy, configFile, dryRun } = options
-  let cli = new SentryCli(configFile, options)
-  dryRun && (cli = new DrySentryCli(cli) as any)
-  // if (!build.sourcemap) {
-  //   this.warn('No sourcemap found, won\'t upload sourcemap.')
-  //   return
-  // }
-  const release = await getRelease(options, cli)
-  if (!release) {
-    console.warn('[UnpluginSentry]: No `release` found, won\'t upload sourcemap.')
-    return
-  }
+  const { 
+    sourcemap, commits, cleanLocal, cleanArtifacts, 
+    finalize, deploy, silent
+  } = options
+  const cli = getSentryCli(options)
+  const release = options.release!
+  
   // create a new release
   await cli.releases.new(release)
+
   // delete previous artifacts in the release
   cleanArtifacts && await cli.execute(
     ['releases', 'files', release, 'delete', '--all'],
     true,
   )
+
   // upload sourcemap(TODO: MAKE SURE INCLUDE AND URLPREFIX IS RIGHT)
   // @ts-expect-error include & urlPrefix
   await cli.releases.uploadSourceMaps(release, sourcemap)
+
   // set commits
   const shouldCommit = commits?.auto || (commits?.repo && commits?.commit)
   shouldCommit && await cli.releases.setCommits(release, commits!)
+
   // finalize release
   finalize && await cli.releases.finalize(release)
-  // set delploy(todo: set deploy env)
-  // @ts-expect-error env
-  await cli.releases.newDeploy(release, deploy!)
+
+  // set delploy
+  // @ts-ignore
+  await cli.releases.newDeploy(release, deploy)
+
   // delete sourcemap after all is done
   // support `include: string[]` only
-  const sourmapGlobs = (sourcemap?.include as string[] || [process.cwd()]).map(
-    dir => path.join(process.cwd(), dir, './**/*.js.map'),
-  )
-  console.warn(`[UnpluginSentry]: Cleaning local sourcemap ${sourmapGlobs}`)
-  cleanLocal && await Promise.all(sourmapGlobs.map(glob => deleteFile(glob)))
+  if(cleanLocal && sourcemap?.include?.length) {
+    if(sourcemap.include.some(dir => typeof dir !== 'string')) {
+      throw new Error(`[UnpluginSentry]: When using "cleanLocal", the "include" must be an array of string.`)
+    }
+    const sourmapGlobs = (sourcemap.include as string[]).map(
+      dir => path.join(process.cwd(), dir, './**/*.js.map'),
+    )
+    !silent && console.log(`[UnpluginSentry]: Cleaning local sourcemap ${sourmapGlobs}`)
+    await Promise.all(sourmapGlobs.map(glob => deleteFile(glob)))
+  }
 }
 
 /**
@@ -91,7 +97,7 @@ class DrySentryCli {
     if (data !== undefined) {
       // eslint-disable-next-line no-console
       console.log(
-        `[Sentry Webpack Plugin] ${label} ${util.inspect(
+        `[UnpluginSentry] ${label} ${util.inspect(
           data,
           false,
           null,
@@ -101,7 +107,7 @@ class DrySentryCli {
     }
     else {
       // eslint-disable-next-line no-console
-      console.log(`[Sentry Webpack Plugin] ${label}`)
+      console.log(`[UnpluginSentry] ${label}`)
     }
   }
 }
@@ -109,22 +115,38 @@ class DrySentryCli {
 /**
  * Get release version
  */
-async function getRelease(options: Options, cli: SentryCli): Promise<string> {
-  const { shortRelease } = options
-  const specifiedRelease = options.release || process.env.SENTRY_RELEASE
-  return specifiedRelease
-    ? Promise.resolve(specifiedRelease.trim())
-    : cli.releases.proposeVersion()
-      .then(version => shortRelease ? version.slice(0, 8) : version)
+export async function getRelease(options: Options): Promise<string> {
+  const userRelease = options.release || process.env.SENTRY_RELEASE
+  if(userRelease) {
+    return userRelease
+  } else {
+    const cli = getSentryCli(options)
+    const proposedRelease = await cli.releases.proposeVersion()
+      .then(version => options.shortRelease ? version.slice(0, 8) : version)
       .catch((e) => {
-        console.error('[UnpluginSentry]: Failed to auto-detect release https://docs.sentry.io/cli/releases/#creating-releases, ', e)
-        return ''
+        console.error(
+          '[UnpluginSentry]: Failed to get a "release", ' 
+          + 'no "release" config or "process.env.SENTRY_RELEASE" found, '
+          + 'auto-detect also failed.', e)
+        throw e
       })
+    return proposedRelease
+  }
+}
+
+/**
+ * Get a sentry-cli instance.
+ */
+function getSentryCli(options: Options): SentryCli {
+  const cli = new SentryCli(options.configFile, options)
+  return options.dryRun ? new DrySentryCli(cli) : cli
 }
 
 /**
  * Delete files
  */
 export function deleteFile(path: string) {
-  return new Promise<void>((resolve, reject) => rimraf(path, e => e ? reject(e) : resolve()))
+  return new Promise<void>((resolve, reject) => 
+    rimraf(path, e => e ? reject(e) : resolve()
+  ))
 }
