@@ -1,5 +1,5 @@
 const path = require('path');
-const unpluginSentry = require('../../dist/webpack.cjs').default
+const unpluginSentry = require('../../dist/webpack').default
 
 module.exports = {
   entry: './src/index.js',

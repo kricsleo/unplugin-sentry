@@ -2,12 +2,12 @@
 
 [![NPM version](https://img.shields.io/npm/v/unplugin-sentry?color=a1b858&label=)](https://www.npmjs.com/package/unplugin-sentry)
 
-Plugin for Sentry, support webpack & vite & rollup.
+Sentry plugin for webpack, vite, rollup, nuxt .ect.
 
 ## Install
 
 ```bash
-npm i unplugin-sentry
+npm i unplugin-sentry -D
 ```
 
 <details>
@@ -24,7 +24,7 @@ export default defineConfig({
 })
 ```
 
-Example: [`playground/`](./playground/)
+Example: [`playground/`](./playground/vite)
 
 <br></details>
 
@@ -42,6 +42,8 @@ export default {
 }
 ```
 
+Example: [`playground/`](./playground/rollup)
+
 <br></details>
 
 
@@ -58,6 +60,10 @@ module.exports = {
 }
 ```
 
+Example: [`playground/`](./playground/webpack)
+
+> This module works for Webpack >= 3
+
 <br></details>
 
 <details>
@@ -71,6 +77,8 @@ export default {
   ],
 }
 ```
+
+Example: [`playground/`](./playground/nuxt)
 
 > This module works for both Nuxt 2 and [Nuxt Vite](https://github.com/nuxt/vite)
 
@@ -92,4 +100,38 @@ module.exports = {
 
 <br></details>
 
-Support for `esbuild` is welcome!(I'll do it later.)
+<details>
+<summary>esbuild</summary><br>
+
+Haven't tested it yet.
+
+<br></details>
+
+## Runtime Support
+
+Besides uploading sourcemap to Sentry and other publishing works, this plugin also injects a virtual module named `virtual-unplugin-sentry-runtime` into your project. 
+
+It provides some useful meta info when initing Sentry at runtime. For example, when you call `Sentry.init({/** options **/})`, the `environment` and `release` options must match the one you use when uploading sourcemap. So that when debugging the issue in Sentry, the sourcemap can be correctly mapped.
+
+```ts
+import * as sentryMeta from 'virtual-unplugin-sentry-runtime'
+
+console.log(sentryMeta)
+// {
+//   PROJECT: string
+//   ORG: string
+//   ENV: string
+//   RELEASE: string
+//   ... // more to come
+// }
+```
+
+For TS support, add the following config to your `tsconfig.json`:
+
+```json
+{
+  "compilerOptions": {
+    "types": ["unplugin-sentry/runtime"]
+  }
+}
+```
