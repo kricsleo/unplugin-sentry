@@ -5,8 +5,8 @@
   "author": "kricsleo",
   "license": "MIT",
   "scripts": {
-    "build": "webpack",
-    "start": "webpack serve --mode=development"
+    "build": "NODE_ENV=production webpack",
+    "start": "NODE_ENV=development webpack serve --open --mode=development "
   },
   "devDependencies": {
     "webpack": "^5.38.1",

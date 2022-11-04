@@ -1,6 +1,5 @@
-const unpluginSenrty = require('../../dist/webpack.cjs').default
 const path = require('path');
-const HtmlWebpackPlugin = require('html-webpack-plugin')
+const unpluginSenrty = require('../../dist/webpack.cjs').default
 
 module.exports = {
   entry: './src/index.js',
@@ -13,10 +12,10 @@ module.exports = {
       url: 'https://sentry.io/',
       org: 'kricsleo',
       project: 'demo',
-      cleanLocal: false,
-      deploy: { env: 'production'},
-      authToken: 'a38a7e0a606045a1ab35ce877f53975684db943b9c424bb18925db86993dab05'
+      publish: process.env.NODE_ENV === 'production',
+      dryRun: true,
     }),
   ],
+  devtool: 'hidden-source-map',
   stats: 'errors-only',
 };
