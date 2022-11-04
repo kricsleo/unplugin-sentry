@@ -1,6 +1,6 @@
 import { normalize } from 'path'
 import type { UnpluginOptions } from 'unplugin'
-import { getRelease, uploadSourcemap } from './sentry'
+import { getRelease, publishProject } from './sentry'
 import type { Options } from './types'
 import { getVirtualContent, resolvedVirtualModuleId, virtualModuleId } from './virtual-module'
 import VirtualModulesPlugin from 'webpack-virtual-modules'
@@ -9,14 +9,8 @@ import VirtualModulesPlugin from 'webpack-virtual-modules'
  * vite
  */
 export function resolveViteConfig(options: Options): UnpluginOptions['vite'] {
-  let shouldUploadSourcemap = false
   let resoleConfigPromise: Promise<void>
   return {
-    apply({ build }, { command }) {
-      // only upload sourcemap when building and sourcemap exists
-      shouldUploadSourcemap = !!(command === 'build' && build?.sourcemap)
-      return true
-    },
     configResolved(resolvedConfig) {
       const { build, env, mode } = resolvedConfig
       resoleConfigPromise = (async () => {
@@ -25,7 +19,7 @@ export function resolveViteConfig(options: Options): UnpluginOptions['vite'] {
           env: mode,
           release,
           include: [normalize(`./${build.outDir}/${build.assetsDir}`)],
-          urlPrefix: normalize(`~${env.BASE_URL}/${build.assetsDir}/`),
+          urlPrefix: normalize(`~/${env.BASE_URL}/${build.assetsDir}/`),
         })
       })()
     },
@@ -41,9 +35,9 @@ export function resolveViteConfig(options: Options): UnpluginOptions['vite'] {
       }
     },
     async closeBundle() {
-      if(shouldUploadSourcemap) {
+      if(options.publish) {
         await resoleConfigPromise
-        await uploadSourcemap(options)
+        await publishProject(options)
       }
     },
   }
@@ -53,26 +47,36 @@ export function resolveViteConfig(options: Options): UnpluginOptions['vite'] {
  * rollup
  */
 export function resolveRollupConfig(options: Options): UnpluginOptions['rollup'] {
+  let resoleConfigPromise: Promise<void>
+  let releasePromise = getRelease(options)
   return {
     async renderStart(output) {
-      const release = await getRelease(options)
-      mergeSentryOptions(options, {
-        release,
-        include: output.dir ? [output.dir] : undefined,
-      })
+      resoleConfigPromise = (async () => {
+        const release = await releasePromise
+        // todo: add rollup default configs
+        mergeSentryOptions(options, {
+          release,
+          include: output.dir ? [output.dir] : [],
+        })
+      })()
     },
     resolveId(id) {
       if (id === virtualModuleId) {
         return resolvedVirtualModuleId
       }
     },
-    load(id) {
+    async load(id) {
       if (id === resolvedVirtualModuleId) {
+        const release = await releasePromise
+        mergeSentryOptions(options, { release })
         return getVirtualContent(options)
       }
     },
     async closeBundle() {
-      await uploadSourcemap(options)
+      if(options.publish) {
+        await resoleConfigPromise
+        await publishProject(options)
+      }
     },
   }
 }
@@ -89,38 +93,31 @@ export function resovleWebpackConfig(options: Options): UnpluginOptions['webpack
       [webpackVirtualMoudle]: getVirtualContent(options)
     });
     virtualModules.apply(compiler)
-    const releasePromsie = getRelease(options)
 
-    // update virtual module
-    releasePromsie.then(release => {
-      virtualModules.writeModule(webpackVirtualMoudle, getVirtualContent({
-        ...options,
-        release
-      }))
-    })
+    // resolve config
+    const resoleConfigPromise = (async () => {
+      const release = await getRelease(options)
+      const { publicPath, path } = compiler.options.output
 
-    // only upload sourcemap when building and sourcemap exists
-    const shouldUploadSourcemap = !compiler.watchMode && compiler.options.devtool
-    if(shouldUploadSourcemap) {
-      compiler.hooks.afterEmit.tapAsync('UnpluginSentry', async (compilation, cb) => {
-        const { publicPath, path } = compiler.options.output
-        if (publicPath === 'auto') {
-          // @see https://webpack.js.org/guides/public-path/#automatic-publicpath
-          return cb(new Error('[UnpluginSenrty]: Auto-detect "include" failed, because "publicPath" of webpack is "auto". You can specify "include" yourself.'))
-        }
-        try {
-          const release = await releasePromsie
-          mergeSentryOptions(options, {
-            release,
-            include: [path!],
-            urlPrefix: normalize(`~/${publicPath}`),
-          })
-          // todo
-          // await uploadSourcemap(options)
-          cb()
-        } catch(e) {
-          cb(e as Error)
-        }
+      // publicPath === 'auto': https://webpack.js.org/guides/public-path/#automatic-publicpath
+      const urlPrefix = !publicPath || publicPath === 'auto' 
+        ? undefined
+        : normalize(`~/${publicPath}`)
+      mergeSentryOptions(options, {
+        release,
+        include: path ? [path] : [],
+        urlPrefix
+      })
+
+      // update virtual module
+      virtualModules.writeModule(webpackVirtualMoudle, getVirtualContent(options))
+    })()
+
+    // publish project
+    if(options.publish) {
+      compiler.hooks.done.tap('UnpluginSentry', async () => {
+        await resoleConfigPromise
+        await publishProject(options)
       })
     }
   }
@@ -136,8 +133,12 @@ function mergeSentryOptions(options: Options, bundlerConfig: Partial<Options> & 
 }) {
   options.release ||= bundlerConfig.release
   options.deploy ||= {}
-  options.deploy.env ||= bundlerConfig.env
-  options.sourcemap ||= {}
-  options.sourcemap.include ||= bundlerConfig.include
-  options.sourcemap.urlPrefix ||= bundlerConfig.urlPrefix
+  options.deploy.env ||= bundlerConfig.env || process.env.NODE_ENV
+  if(options.sourcemap === false) {
+    options.sourcemap = { include: [] }
+  } else {
+    options.sourcemap ||= {}
+    options.sourcemap.include ||= bundlerConfig.include
+    options.sourcemap.urlPrefix ||= bundlerConfig.urlPrefix
+  }
 }

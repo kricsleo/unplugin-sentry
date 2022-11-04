@@ -30,9 +30,15 @@ export interface Options extends SentryCliOptions {
    */
   shortRelease?: boolean
   /**
-   * Sourcemap configs
+   * If publish project,
+   * means upload soucemap and record deploy info .etc.
    */
-  sourcemap?: SourcemapOptions
+  publish?: boolean
+  /**
+   * Sourcemap configs
+   * set `false` to disable upload sourcemap
+   */
+  sourcemap?: false | SourcemapOptions
   /**
    * Deploy configs
    */
@@ -70,12 +76,12 @@ export interface Options extends SentryCliOptions {
 export interface SourcemapOptions extends Omit<SentryCliUploadSourceMapsOptions, 'include'> {
   /**
    * Sourcemap paths
-   * Auto-detect(May failed, then you should provide it yourself)
+   * Auto-detect(You can provide it when it's wrong)
    */
   include?: SentryCliUploadSourceMapsOptions['include']
   /**
    * !IMPORTANT!: MUST START WITH `~/`
-   * Auto-detect(May failed, then you should provide it yourself)
+   * Auto-detect(You can provide it when it's wrong)
    */
   urlPrefix?: SentryCliUploadSourceMapsOptions['urlPrefix']
 }
@@ -83,7 +89,7 @@ export interface SourcemapOptions extends Omit<SentryCliUploadSourceMapsOptions,
 export interface DeployOptions extends Omit<SentryCliNewDeployOptions, 'env'> {
   /**
    * Environment
-   * Auto-detect(Fallback to 'process.env.NODE_ENV', may failed, then you should provide it yourself)
+   * @default process.env.NODE_ENV
    */
   env?: SentryCliNewDeployOptions['env']
 }

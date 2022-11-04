@@ -1,29 +1,24 @@
-import resolve from '@rollup/plugin-node-resolve'
-import commonjs from '@rollup/plugin-commonjs'
-import { terser } from 'rollup-plugin-terser'
-import Unplugin from '../../dist/rollup'
-import { options } from '../../local.test'
+import unpluginSentry from '../../dist/rollup'
 
 // `npm run build` -> `production` is true
 // `npm run dev` -> `production` is false
 const production = !process.env.ROLLUP_WATCH
 
 export default {
-  input: 'src/main.js',
+  input: 'src/index.js',
   output: {
-    format: 'iife', // immediately-invoked function expression — suitable for <script> tags
+    format: 'iife',
     sourcemap: true,
     dir: 'dist',
   },
   plugins: [
-    resolve(), // tells Rollup how to find date-fns in node_modules
-    commonjs(), // converts date-fns to ES modules
-    production && terser(), // minify, but only in production
-    Unplugin({
-      ...options,
-      deploy: {
-        env: 'production',
-      },
+    unpluginSentry({
+      url: 'https://sentry.io/',
+      org: 'kricsleo',
+      project: 'demo',
+      authToken: 'xxxxxx',
+      publish: production,
+      dryRun: true,
     }),
   ],
 }
