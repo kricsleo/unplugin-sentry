@@ -32,6 +32,7 @@ export interface Options extends SentryCliOptions {
   /**
    * If publish project,
    * means upload soucemap and record deploy info .etc.
+   * @default false
    */
   publish?: boolean
   /**
@@ -50,7 +51,7 @@ export interface Options extends SentryCliOptions {
   cleanLocal?: boolean
   /**
    * If Remove all the artifacts in the release before the upload.
-   * @default true
+   * @default false
    */
   cleanArtifacts?: boolean
   /**

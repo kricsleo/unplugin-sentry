@@ -8,7 +8,6 @@ import { resolveRollupConfig, resolveViteConfig, resovleWebpackConfig } from './
 const defaultOptions: Partial<Options> = {
   finalize: true,
   cleanLocal: true,
-  cleanArtifacts: true,
   shortRelease: true,
 }
 

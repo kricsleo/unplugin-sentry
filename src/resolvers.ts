@@ -115,9 +115,14 @@ export function resovleWebpackConfig(options: Options): UnpluginOptions['webpack
 
     // publish project
     if(options.publish) {
-      compiler.hooks.done.tap('UnpluginSentry', async () => {
-        await resoleConfigPromise
-        await publishProject(options)
+      compiler.hooks.done.tapAsync('UnpluginSentry', async (_, cb) => {
+        try {
+          await resoleConfigPromise
+          await publishProject(options)
+          cb()
+        } catch(e) {
+          cb(e as Error)
+        }
       })
     }
   }

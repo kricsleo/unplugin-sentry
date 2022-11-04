@@ -1,9 +1,5 @@
 import { defineConfig } from 'vite'
 import unpluginSentry from '../../dist/vite'
-import path from 'path'
-console.log('ddd', path.normalize('~//kdjfkdj'));
-console.log('dddddd', path.normalize('~/kdjfkdj'));
-
 
 export default defineConfig({
   plugins: [
