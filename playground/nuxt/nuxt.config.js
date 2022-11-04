@@ -36,10 +36,9 @@ export default {
       url: 'https://sentry.io/',
       org: 'kricsleo',
       project: 'demo',
-      authToken: 'a38a7e0a606045a1ab35ce877f53975684db943b9c424bb18925db86993dab05',
+      authToken: 'xxxxxx',
       publish: true,
-      cleanLocal: false,
-      // dryRun: true,
+      dryRun: true,
     }]
   ],
 
