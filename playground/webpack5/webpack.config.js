@@ -1,5 +1,5 @@
 const path = require('path');
-const unpluginSenrty = require('../../dist/webpack.cjs').default
+const unpluginSentry = require('../../dist/webpack.cjs').default
 
 module.exports = {
   entry: './src/index.js',
@@ -8,10 +8,11 @@ module.exports = {
     path: path.resolve(__dirname, 'dist'),
   },
   plugins: [
-    unpluginSenrty({
+    unpluginSentry({
       url: 'https://sentry.io/',
       org: 'kricsleo',
       project: 'demo',
+      authToken: 'xxxxxx',
       publish: process.env.NODE_ENV === 'production',
       dryRun: true,
     }),

@@ -1,4 +1,9 @@
-import * as all from 'virtual-unplugin-sentry-runtime'
-console.log('vite all', all);
+import * as sentryRuntime from 'virtual-unplugin-sentry-runtime'
 
-document.getElementById('app')!.innerHTML = '__UNPLUGIN__'
+function component() {
+  const element = document.createElement('pre');
+  element.innerHTML = JSON.stringify(sentryRuntime, null, 2);
+  return element;
+}
+
+document.body.appendChild(component());

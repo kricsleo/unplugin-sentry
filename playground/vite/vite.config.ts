@@ -1,17 +1,21 @@
 import { defineConfig } from 'vite'
-import Inspect from 'vite-plugin-inspect'
-import Unplugin from '../../src/vite'
-import { options } from '../../local.test'
+import unpluginSentry from '../../dist/vite'
 
 export default defineConfig({
   plugins: [
-    Inspect(),
-    {
-      ...Unplugin(options),
-      apply: 'serve'
-    },
+    unpluginSentry({
+      url: 'https://sentry.io/',
+      org: 'kricsleo',
+      project: 'demo',
+      authToken: 'xxxxxx',
+      publish: process.env.NODE_ENV === 'production',
+      dryRun: true,
+    }),
   ],
   build: {
     sourcemap: true,
   },
+  server: {
+    open: true
+  }
 })
