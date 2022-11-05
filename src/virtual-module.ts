@@ -9,5 +9,6 @@ export function getVirtualContent(options: Options): string {
     export const PROJECT = ${JSON.stringify(options.project)};
     export const ENV = ${JSON.stringify(options.deploy?.env)};
     export const RELEASE = ${JSON.stringify(options.release)};
+    export const PUBLISH = ${JSON.stringify(options.publish)};
   `
 }

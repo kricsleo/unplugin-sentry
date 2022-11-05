@@ -136,6 +136,7 @@ function mergeSentryOptions(options: Options, bundlerConfig: Partial<Options> & 
   urlPrefix?: string
   env?: string
 }) {
+  options.publish = !!options.publish
   options.release ||= bundlerConfig.release
   options.deploy ||= {}
   options.deploy.env ||= bundlerConfig.env || process.env.NODE_ENV
