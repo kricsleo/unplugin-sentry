@@ -107,6 +107,15 @@ Haven't tested it yet.
 
 <br></details>
 
+## Options
+
+Much like [`sentry-webpack-plugin`](https://github.com/getsentry/sentry-webpack-plugin#options), but provide two more options:
+
+| Option   | Type     | Required | Default | Description                                                                      |
+| -------- | -------- | -------- | ------- |-------------------------------------------------------------------------------- |
+| cleanLocal   | `boolean` | optional | `true` | Delete local sourcemap files after uploaded to Sentry.        |
+| publish  | `boolean` | optional | `false` | If publish project to Sentry(Release, deploy, upload sourcemap and so on.).                                             |
+
 ## Runtime Support
 
 Besides uploading sourcemap to Sentry and other publishing works, this plugin also injects a virtual module named `virtual-unplugin-sentry-runtime` into your project. 
@@ -135,3 +144,7 @@ For TS support, add the following config to your `tsconfig.json`:
   }
 }
 ```
+
+## Thanks
+
+[vite-plugin-sentry](https://github.com/ikenfin/vite-plugin-sentry)
