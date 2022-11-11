@@ -9,12 +9,10 @@ export default defineConfig({
       project: 'demo',
       authToken: 'xxxxxx',
       publish: process.env.NODE_ENV === 'production',
+      cleanLocal: false,
       dryRun: true,
     }),
   ],
-  build: {
-    sourcemap: true,
-  },
   server: {
     open: true
   }

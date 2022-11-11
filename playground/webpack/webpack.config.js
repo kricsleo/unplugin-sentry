@@ -14,9 +14,9 @@ module.exports = {
       project: 'demo',
       authToken: 'xxxxxx',
       publish: process.env.NODE_ENV === 'production',
+      cleanLocal: false,
       dryRun: true,
     }),
   ],
-  devtool: 'hidden-source-map',
   stats: 'errors-only',
 };

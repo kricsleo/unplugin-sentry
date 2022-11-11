@@ -60,6 +60,14 @@ export function resolveRollupConfig(options: Options): UnpluginOptions['rollup']
   let releasePromise = getRelease(options)
   return {
     async renderStart(output) {
+      // auto set soucemap config
+      if(options.publish) {
+        if(output.sourcemap !== 'hidden') {
+          console.warn(`[UnpluginSentry] When publishing with sentry, the rollup's "build.sourcemap" config will be automatically set to "hidden".`)
+          output.sourcemap = 'hidden'
+        }
+      }
+
       resoleConfigPromise = (async () => {
         const release = await releasePromise
         // todo: add rollup default configs
@@ -96,6 +104,7 @@ export function resolveRollupConfig(options: Options): UnpluginOptions['rollup']
 export function resovleWebpackConfig(options: Options): UnpluginOptions['webpack'] {
   return (compiler) => {
 
+    // auto set soucemap config
     if(options.publish) {
       if(compiler.options.devtool !== 'hidden-source-map') {
         console.warn(`[UnpluginSentry] When publishing with sentry, the webpack's "devtool" config will be automatically set to "hidden-source-map".`)
@@ -164,5 +173,3 @@ function mergeSentryOptions(options: Options, bundlerConfig: Partial<Options> & 
     options.sourcemap.urlPrefix ||= bundlerConfig.urlPrefix
   }
 }
-
-function getBuSourcemapConfig
