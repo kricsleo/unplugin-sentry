@@ -135,3 +135,5 @@ For TS support, add the following config to your `tsconfig.json`:
   }
 }
 ```
+
+## Options

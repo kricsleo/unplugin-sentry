@@ -11,6 +11,15 @@ import VirtualModulesPlugin from 'webpack-virtual-modules'
 export function resolveViteConfig(options: Options): UnpluginOptions['vite'] {
   let resoleConfigPromise: Promise<void>
   return {
+    config(config) {
+      if(options.publish) {
+        config.build ||= {}
+        if(config.build.sourcemap !== 'hidden') {
+          console.warn(`[UnpluginSentry] When publishing with sentry, the vite's "build.sourcemap" config will be automatically set to "hidden".`)
+          config.build.sourcemap = 'hidden'
+        }
+      }
+    },
     configResolved(resolvedConfig) {
       const { build, env, mode } = resolvedConfig
       resoleConfigPromise = (async () => {
@@ -87,6 +96,13 @@ export function resolveRollupConfig(options: Options): UnpluginOptions['rollup']
 export function resovleWebpackConfig(options: Options): UnpluginOptions['webpack'] {
   return (compiler) => {
 
+    if(options.publish) {
+      if(compiler.options.devtool !== 'hidden-source-map') {
+        console.warn(`[UnpluginSentry] When publishing with sentry, the webpack's "devtool" config will be automatically set to "hidden-source-map".`)
+        compiler.options.devtool = 'hidden-source-map'
+      }
+    }
+
     // add webpack virtual module
     const webpackVirtualMoudle = `node_modules/${virtualModuleId}.js`
     const virtualModules = new VirtualModulesPlugin({
@@ -148,3 +164,5 @@ function mergeSentryOptions(options: Options, bundlerConfig: Partial<Options> & 
     options.sourcemap.urlPrefix ||= bundlerConfig.urlPrefix
   }
 }
+
+function getBuSourcemapConfig
