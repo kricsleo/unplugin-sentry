@@ -119,15 +119,6 @@ I don't use esbuild for now, so it haven't been tested in esbuild yet.
 
 <br></details>
 
-## Options
-
-Much like [`sentry-webpack-plugin`](https://github.com/getsentry/sentry-webpack-plugin#options), but provide two more options:
-
-| Option   | Type     | Required | Default | Description                                                                      |
-| -------- | -------- | -------- | ------- |-------------------------------------------------------------------------------- |
-| cleanLocal   | `boolean` | optional | `true` | Delete local sourcemap files after uploaded to Sentry.        |
-| publish  | `boolean` | optional | `false` | If publish project to Sentry(Release, deploy, upload sourcemap and so on.).                                             |
-
 ## Runtime Support
 
 Besides uploading sourcemap to Sentry and other publishing works, this plugin also injects a virtual module named `virtual-unplugin-sentry-runtime` into your project. 
@@ -147,7 +138,7 @@ console.log(sentryMeta)
 // }
 ```
 
-For TS support, add the following config to your `tsconfig.json`:
+Need TS support for this runtime module? Just add the following config to your `tsconfig.json`.
 
 ```json
 {
@@ -163,8 +154,8 @@ Much like [@sentry/webpack-plugin](https://github.com/getsentry/sentry-webpack-p
 
 | Option   | Type     | Required | Default | Description                                                                      |
 | -------- | -------- | -------- | ------- |-------------------------------------------------------------------------------- |
+| publish  | `boolean` | optional | `false` | If publish project to Sentry(Release, deploy, upload sourcemap and so on.) You may only want to turn it on when deploying and off when developing locally.                                             |
 | cleanLocal   | `boolean` | optional | `true` | Delete local sourcemap files after uploaded to Sentry.        |
-| publish  | `boolean` | optional | `false` | If publish project to Sentry(Release, deploy, upload sourcemap and so on.).                                             |
 
 
 ```ts
@@ -202,7 +193,7 @@ export interface Options extends SentryCliOptions {
   /**
    * If publish project,
    * means upload soucemap and record deploy info .etc.
-   * You might want to turn it on when deploying but not locally developing
+   * You might want to turn it on just during deploying but not locally developing
    * @default false
    */
   publish?: boolean
@@ -266,3 +257,8 @@ export interface DeployOptions extends Omit<SentryCliNewDeployOptions, 'env'> {
   env?: SentryCliNewDeployOptions['env']
 }
 ```
+
+
+## License
+
+[MIT](./LICENSE) License © 2021-Present [kricsleo](https://github.com/kricsleo)
