@@ -8,7 +8,7 @@ export default {
   input: 'src/index.js',
   output: {
     format: 'iife',
-    sourcemap: true,
+    sourcemap: 'hidden',
     dir: 'dist',
   },
   plugins: [
@@ -18,6 +18,7 @@ export default {
       project: 'demo',
       authToken: 'xxxxxx',
       publish: production,
+      cleanLocal: false,
       dryRun: true,
     }),
   ],
