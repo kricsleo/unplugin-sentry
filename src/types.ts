@@ -37,9 +37,8 @@ export interface Options extends SentryCliOptions {
   publish?: boolean
   /**
    * Sourcemap configs
-   * set `false` to disable upload sourcemap
    */
-  sourcemap?: false | SourcemapOptions
+  sourcemap?: SourcemapOptions
   /**
    * Deploy configs
    */

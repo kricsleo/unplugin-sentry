@@ -1,5 +1,5 @@
 const path = require('path');
-const unpluginSentry = require('../../dist/webpack').default
+const unpluginSentry = require('../../dist/webpack.cjs').default
 
 module.exports = {
   entry: './src/index.js',
@@ -13,7 +13,7 @@ module.exports = {
       org: 'kricsleo',
       project: 'demo',
       authToken: 'xxxxxx',
-      publish: process.env.NODE_ENV === 'production',
+      publish: true,
       cleanLocal: false,
       dryRun: true,
     }),
