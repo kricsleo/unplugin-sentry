@@ -2,7 +2,7 @@
 
 [![NPM version](https://img.shields.io/npm/v/unplugin-sentry?color=a1b858&label=)](https://www.npmjs.com/package/unplugin-sentry)
 
-Sentry plugin for webpack, vite, rollup, nuxt .ect.
+All-in-one plugin for Sentry, supports webpack, vite, rollup, nuxt .ect.
 
 ## Install
 
