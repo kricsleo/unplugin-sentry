@@ -128,15 +128,9 @@ export async function getRelease(options: Options): Promise<string> {
   } else {
     const cli = getSentryCli(options)
     const proposedRelease = await cli.releases.proposeVersion()
-      .then(version => options.shortRelease ? version.slice(0, 8) : version)
-      .catch((e) => {
-        console.error(
-          '[UnpluginSentry]: Failed to get a "release", ' 
-          + 'no "release" config or "process.env.SENTRY_RELEASE" found, '
-          + 'auto-detect also failed.', e)
-        throw e
-      })
-    return proposedRelease
+    return options.shortRelease 
+      ? proposedRelease.slice(0, 8) 
+      : proposedRelease
   }
 }
 

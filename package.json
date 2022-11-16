@@ -1,7 +1,7 @@
 {
   "name": "unplugin-sentry",
   "type": "module",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "packageManager": "pnpm@7.1.1",
   "description": "Sentry plugin for webpack, vite, rollup, nuxt .etc.",
   "license": "MIT",
@@ -89,8 +89,7 @@
   "dependencies": {
     "@sentry/cli": "^2.7.0",
     "rimraf": "^3.0.2",
-    "unplugin": "^0.9.6",
-    "webpack-virtual-modules": "^0.4.6"
+    "unplugin": "^0.10.2"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^0.27.0",
