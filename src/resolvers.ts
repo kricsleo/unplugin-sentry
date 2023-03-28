@@ -1,11 +1,13 @@
 import { normalize } from 'path'
 import type { UnpluginOptions } from 'unplugin'
 import type { Options } from './types'
+import chalk from 'chalk'
 
 /** output warning message */
 export const logger = {
-  warn: (e: string | Error) => console.warn(e),
-  error: (e: string | Error) => console.error(e)
+  log: (e: string | Error) => console.warn(chalk.bgGreen.black('[UnpluginSentry]',) + ':', e),
+  warn: (e: string | Error) => console.warn(chalk.bgYellow.black('[UnpluginSentry]') + ':', e),
+  error: (e: string | Error) => console.error(chalk.bgRed.white('[UnpluginSentry]') + ':', e)
 }
 
 /**
@@ -17,7 +19,7 @@ export function resolveViteConfig(options: Options): UnpluginOptions['vite'] {
       if(options.publish) {
         config.build ||= {}
         if(config.build.sourcemap !== 'hidden') {
-          !options.silent && logger.warn(`[UnpluginSentry] When publishing with sentry, the vite's "build.sourcemap" config will be automatically set to "hidden".`)
+          !options.silent && logger.warn(`Vite's \`build.sourcemap\` config will be automatically set to \`hidden\` when publishing with Sentry.`)
           config.build.sourcemap = 'hidden'
         }
       }
@@ -43,7 +45,7 @@ export function resolveRollupConfig(options: Options): UnpluginOptions['rollup']
     async renderStart(output) {
       if(options.publish) {
         if(output.sourcemap !== 'hidden') {
-          !options.silent && logger.warn(`[UnpluginSentry] When publishing with sentry, the rollup's "build.sourcemap" config will be automatically set to "hidden".`)
+          !options.silent && logger.warn(`Rollup's \`build.sourcemap\` config will be automatically set to \`hidden\` when publishing with Sentry.`)
           output.sourcemap = 'hidden'
         }
       }
@@ -64,7 +66,7 @@ export function resovleWebpackConfig(options: Options): UnpluginOptions['webpack
   return (compiler) => {
     if(options.publish) {
       if(compiler.options.devtool !== 'hidden-source-map') {
-        !options.silent && logger.warn(`[UnpluginSentry] When publishing with sentry, the webpack's "devtool" config will be automatically set to "hidden-source-map".`)
+        !options.silent && logger.warn(`Webpack's \`devtool\` config will be automatically set to \`hidden-source-map\` when publishing with Sentry.`)
         compiler.options.devtool = 'hidden-source-map'
       }
     }

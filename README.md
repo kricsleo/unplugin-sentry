@@ -1,6 +1,7 @@
 # unplugin-sentry
 
-[![NPM version](https://img.shields.io/npm/v/unplugin-sentry?color=a1b858&label=)](https://www.npmjs.com/package/unplugin-sentry)
+[![NPM version](https://img.shields.io/npm/v/unplugin-sentry?style=flat&colorA=18181B&colorB=F0DB4F)](https://www.npmjs.com/package/unplugin-sentry)
+[![License](https://img.shields.io/github/license/kricsleo/unplugin-sentry.svg?style=flat&colorA=18181B&colorB=F0DB4F)](https://github.com/kricsleo/unplugin-sentry/blob/main/LICENSE)
 
 All-in-one plugin for Sentry, supports webpack, vite, rollup, nuxt .ect.
 

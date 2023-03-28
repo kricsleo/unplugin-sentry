@@ -18,5 +18,13 @@ module.exports = {
       dryRun: true,
     }),
   ],
+  module: {
+    rules: [
+      {
+        test: /\.css$/i,
+        use: ["css-loader"],
+      },
+    ],
+  },
   stats: 'errors-only',
 };

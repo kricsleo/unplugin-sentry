@@ -4,6 +4,7 @@ export const virtualModuleId = 'virtual-unplugin-sentry-runtime'
 export const resolvedVirtualModuleId = `\0${virtualModuleId}`
 
 export function getVirtualContent(options: Options): string {
+  // todo: add dist
   return `
     export const ORG = ${JSON.stringify(options.org)};
     export const PROJECT = ${JSON.stringify(options.project)};

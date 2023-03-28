@@ -1,4 +1,5 @@
 import * as sentryRuntime from 'virtual-unplugin-sentry-runtime'
+import './style.css'
 
 function component() {
   const element = document.createElement('pre');

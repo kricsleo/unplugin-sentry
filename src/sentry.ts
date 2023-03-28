@@ -3,6 +3,7 @@ import util from 'util'
 import SentryCli, { SentryCliUploadSourceMapsOptions } from '@sentry/cli'
 import rimraf from 'rimraf'
 import type { Options } from './types'
+import { logger } from './resolvers'
 
 /** 
  * Release project,
@@ -51,8 +52,8 @@ export async function publishProject(options: Options) {
         path.resolve(process.cwd(), dir, './**/*.css.map'),
       ],
     ).flat()
-    !silent && console.log(`[UnpluginSentry]: Cleaning local sourcemap ${sourmapGlobs}`)
-    await Promise.all(sourmapGlobs.map(glob => deleteFile(glob)))
+    !silent && logger.log(`Cleaning local sourcemap\n  ${sourmapGlobs.join('\n  ')}`)
+    await rimraf(sourmapGlobs, { glob: true })
   }
 }
 
@@ -105,9 +106,8 @@ class DrySentryCli {
       return 
     }
     if (data !== undefined) {
-      // eslint-disable-next-line no-console
-      console.log(
-        `[UnpluginSentry] ${label} ${util.inspect(
+      logger.log(
+        `${label} ${util.inspect(
           data,
           false,
           null,
@@ -116,8 +116,7 @@ class DrySentryCli {
       )
     }
     else {
-      // eslint-disable-next-line no-console
-      console.log(`[UnpluginSentry] ${label}`)
+      logger.log(label)
     }
   }
 }
@@ -144,13 +143,4 @@ function getSentryCli(options: Options): SentryCli {
   return options.dryRun 
     ? new DrySentryCli(options.configFile, options)
     : new SentryCli(options.configFile, options)
-}
-
-/**
- * Delete files
- */
-export function deleteFile(path: string) {
-  return new Promise<void>((resolve, reject) => 
-    rimraf(path, e => e ? reject(e) : resolve()
-  ))
 }
