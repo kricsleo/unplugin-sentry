@@ -46,8 +46,11 @@ export async function publishProject(options: Options) {
       throw new Error(`[UnpluginSentry]: When using "cleanLocal", the "include" must be an array of string.`)
     }
     const sourmapGlobs = (sourcemap.include as string[]).map(
-      dir => path.resolve(process.cwd(), dir, './**/*.js.map'),
-    )
+      dir => [
+        path.resolve(process.cwd(), dir, './**/*.js.map'),
+        path.resolve(process.cwd(), dir, './**/*.css.map'),
+      ],
+    ).flat()
     !silent && console.log(`[UnpluginSentry]: Cleaning local sourcemap ${sourmapGlobs}`)
     await Promise.all(sourmapGlobs.map(glob => deleteFile(glob)))
   }

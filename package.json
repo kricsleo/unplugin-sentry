@@ -87,7 +87,7 @@
     "test": "vitest"
   },
   "dependencies": {
-    "@sentry/cli": "^2.7.0",
+    "@sentry/cli": "^2.16.1",
     "rimraf": "^3.0.2",
     "unplugin": "^0.10.2"
   },
