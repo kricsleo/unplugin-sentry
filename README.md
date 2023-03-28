@@ -163,7 +163,7 @@ Extends from [@sentry/cli - SentryCliOptions](https://github.com/getsentry/sentr
 | cleanArtifacts  | `boolean` | ❌       | `false` | If remove previous artifacts in the same release.                                                                      |
 | sourcemap       | [`SourcemapOptions`](#sourcemapoptions) | ❌  | -     | Sourcemap options.                                                                                                     |
 | deploy          | [`DeployOptions`](#deployoptions)    | ❌  | -     | Deploy options.                                                                                                        |
-| commits         | [`CommitsOptions`](#deployoptions)   | ❌  | -     | Commits options.                                                                                                       |
+| commits         | [`CommitsOptions`](#commitsoptions)   | ❌  | -     | Commits options.                                                                                                       |
 | finalize        | `boolean` | ❌       | `true`  | If finalize a release after the publish.                                                                               |
 | silent          | `boolean` | ❌       | `false` | If true, all logs are suppressed.                                                                                      |
 | dryRun          | `boolean` | ❌       | `false` | If attempts a dry run. <br > Usually used for debugging which mocks publishing.                                                                                              |
