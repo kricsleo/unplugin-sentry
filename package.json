@@ -1,7 +1,7 @@
 {
   "name": "unplugin-sentry",
   "type": "module",
-  "version": "0.0.5",
+  "version": "1.0.0",
   "packageManager": "pnpm@7.1.1",
   "description": "Sentry plugin for webpack, vite, rollup, nuxt .etc.",
   "license": "MIT",
