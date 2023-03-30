@@ -52,7 +52,7 @@ export async function publishProject(options: Options) {
         path.resolve(process.cwd(), dir, './**/*.css.map'),
       ],
     ).flat()
-    !silent && logger.log(`Cleaning local sourcemap\n  ${sourmapGlobs.join('\n  ')}`)
+    !silent && logger.log(`Cleaning local sourcemap\n  🧹${sourmapGlobs.join('\n  🧹')}`)
     await rimraf(sourmapGlobs, { glob: true })
   }
 }

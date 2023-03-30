@@ -26,27 +26,29 @@ export default createUnplugin<Options | undefined>((options) => {
       ['warn', 'error'].forEach(name => this && this[name] && (logger[name] = this[name].bind(this)))
     },
     resolveId(id) {
-      if (id === virtualModuleId) {
-        return resolvedVirtualModuleId
-      }
+      return id === virtualModuleId 
+        ? resolvedVirtualModuleId
+        : null
     },
     loadInclude(id) {
       return id === resolvedVirtualModuleId
     },
     async load(id) {
-      if (id === resolvedVirtualModuleId) {
-        await resolveOptsPromise
-        return {
-          code: getVirtualContent(opts),
-          map: { version: 3, mappings: '', sources: [] } as any,
-        }
+      if (id !== resolvedVirtualModuleId) {
+        return null
+      }
+      await resolveOptsPromise
+      return {
+        code: getVirtualContent(opts),
+        map: { version: 3, mappings: '', sources: [] } as any,
       }
     },
     async writeBundle() {
-      if(opts.publish) {
-        await resolveOptsPromise
-        await publishProject(opts)
+      if(!opts.publish) {
+        return
       }
+      await resolveOptsPromise
+      await publishProject(opts)
     },
     vite: resolveViteConfig(opts),
     rollup: resolveRollupConfig(opts),

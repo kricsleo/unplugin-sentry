@@ -76,7 +76,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsup",
+    "build": "rimraf dist && tsup",
     "dev": "tsup --watch src",
     "build:fix": "esno scripts/postbuild.ts",
     "lint": "eslint .",
