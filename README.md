@@ -133,6 +133,7 @@ console.log(sentryMeta)
 //   PROJECT: string
 //   ENV: string
 //   RELEASE: string
+//   DIST: string
 //   PUBLISH: boolean
 // }
 ```
