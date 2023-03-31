@@ -21,10 +21,6 @@ export default createUnplugin<Options | undefined>((options) => {
   return {
     name: 'unplugin-sentry',
     enforce: 'post',
-    buildStart() {
-      // @ts-ignore
-      ['warn', 'error'].forEach(name => this && this[name] && (logger[name] = this[name].bind(this)))
-    },
     resolveId(id) {
       return id === virtualModuleId 
         ? resolvedVirtualModuleId
