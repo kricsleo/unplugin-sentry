@@ -9,10 +9,6 @@
   <img src="https://img.shields.io/npm/types/unplugin-sentry?style=flat&colorA=18181B&colorB=F0DB4F" />
 </a>
 
-<a href="https://bundlephobia.com/package/unplugin-sentry">
-  <img src="https://img.shields.io/bundlephobia/minzip/unplugin-sentry?style=flat&colorA=18181B&colorB=F0DB4F" />
-</a>
-
 <a href="https://github.com/kricsleo/unplugin-sentry/blob/master/LICENSE">
   <img src="https://img.shields.io/github/license/kricsleo/unplugin-sentry.svg?style=flat&colorA=18181B&colorB=F0DB4F" />
 </a>
