@@ -1,10 +1,26 @@
-# unplugin-sentry
+<h1 align="center">unplugin-sentry</h1>
 
-[![NPM version](https://img.shields.io/npm/v/unplugin-sentry?style=flat&colorA=18181B&colorB=F0DB4F)](https://www.npmjs.com/package/unplugin-sentry)
-[![License](https://img.shields.io/github/license/kricsleo/unplugin-sentry.svg?style=flat&colorA=18181B&colorB=F0DB4F)](https://github.com/kricsleo/unplugin-sentry/blob/main/LICENSE)
+<p align="center">
+<a href="https://www.npmjs.com/package/unplugin-sentry">
+  <img src="https://img.shields.io/npm/v/unplugin-sentry?style=flat&colorA=18181B&colorB=F0DB4F" />
+</a>
 
+<a href="https://www.npmjs.com/package/unplugin-sentry">
+  <img src="https://img.shields.io/npm/types/unplugin-sentry?style=flat&colorA=18181B&colorB=F0DB4F" />
+</a>
+
+<a href="https://bundlephobia.com/package/unplugin-sentry">
+  <img src="https://img.shields.io/bundlephobia/minzip/unplugin-sentry?style=flat&colorA=18181B&colorB=F0DB4F" />
+</a>
+
+<a href="https://github.com/kricsleo/unplugin-sentry/blob/master/LICENSE">
+  <img src="https://img.shields.io/github/license/kricsleo/unplugin-sentry.svg?style=flat&colorA=18181B&colorB=F0DB4F" />
+</a>
+</p>
+
+<h3 align="center">
 All-in-one plugin for Sentry, supports webpack, vite, rollup, nuxt .ect.
-
+</h3>
 It's used to upload sourcemap and release your project to Sentry ([What's Sentry?](https://sentry.io/welcome/)).
 
 ## Features
