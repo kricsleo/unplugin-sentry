@@ -177,7 +177,7 @@ Extends from [@sentry/cli - SentryCliUploadSourceMapsOptions](https://github.com
 
 | Prop                 | Type             | Required | Default     | Description                                                                                        |
 |----------------------|------------------|----------|-------------|----------------------------------------------------------------------------------------------------|
-| include              | `Array<string \| SourceMapsPathDescriptor>`  | ✅       | - <br > Auto-detectd from current bundler(webpack, vite, rollup and so on).       | One or more paths that Sentry CLI should scan recursively for sources. <br > It will upload all .map files and match associated .js files. <br > `type SourceMapsPathDescriptor = Omit<SourcemapOptions, 'include'> & { paths: string[] }`                     |
+| include              | `Array<string \| SourceMapsPathDescriptor>`  | ❌       | - <br > Auto-detectd from current bundler(webpack, vite, rollup and so on).       | One or more paths that Sentry CLI should scan recursively for sources. <br > It will upload all .map files and match associated .js files. <br > `type SourceMapsPathDescriptor = Omit<SourcemapOptions, 'include'> & { paths: string[] }`                     |
 | urlPrefix            | `string`         | ❌       | - <br > Auto-detectd from current bundler(webpack, vite, rollup and so on).        | This sets an URL prefix at the beginning of all files. <br > This is also useful if your files are stored in a sub folder. **BUT REMEMBER TO START WITH `~/`.** eg: url-prefix `~/static/js`.                                           |
 | urlSuffix            | `string`         | ❌       | -         | This sets an URL suffix at the end of all files. <br > Useful for appending query parameters.                                                  |
 | ignore               | `string[]`       | ❌       | -         | One or more paths to ignore during upload. Overrides entries in ignoreFile file.                   |
@@ -196,7 +196,7 @@ Extends from [@sentry/cli - SentryCliNewDeployOptions](https://github.com/getsen
 
 | Prop      | Type      | Required | Default | Description                                                                                                       |
 |-----------|-----------|----------|---------|-------------------------------------------------------------------------------------------------------------------|
-| env       | `string`  | ✅       | - <br > Auto-detectd from current bundler(webpack, vite, rollup and so on) and use "process.env.NODE_ENV" as fallback.    | Environment for this release. Values that make sense here would be `production` or `staging`.                    |
+| env       | `string`  | ❌       | - <br > Auto-detectd from current bundler(webpack, vite, rollup and so on) and use "process.env.NODE_ENV" as fallback.    | Environment for this release. Values that make sense here would be `production` or `staging`.                    |
 | started   | `number` \| `string`  | ❌       | -     | Deployment start time in Unix timestamp (in seconds) or ISO 8601 format.                                         |
 | finished  | `number` \| `string`  | ❌       | -     | Deployment finish time in Unix timestamp (in seconds) or ISO 8601 format.                                         |
 | time      | `number`  | ❌       | -     | Deployment duration (in seconds). Can be used instead of started and finished.                                    |
