@@ -1,4 +1,4 @@
-import { Options } from './types'
+import type { Options } from './types'
 
 export const virtualModuleId = 'virtual-unplugin-sentry-runtime'
 export const resolvedVirtualModuleId = `\0${virtualModuleId}`

@@ -1,3 +1,5 @@
+import process from 'node:process'
+// eslint-disable-next-line antfu/no-import-dist
 import unpluginSentry from '../../dist/rollup'
 
 // `npm run build` -> `production` is true

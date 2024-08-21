@@ -1,11 +1,13 @@
-import path from 'path'
-import util from 'util'
-import SentryCli, { SentryCliUploadSourceMapsOptions } from '@sentry/cli'
+import path from 'node:path'
+import util from 'node:util'
+import process from 'node:process'
+import type { SentryCliUploadSourceMapsOptions } from '@sentry/cli'
+import SentryCli from '@sentry/cli'
 import rimraf from 'rimraf'
-import type { Options } from './types'
+import type { DeployOptions, Options } from './types'
 import { logger } from './resolvers'
 
-/** 
+/**
  * Release project,
  * deploy and upload sourcemap .etc.
  */
@@ -19,31 +21,36 @@ export async function publishProject(options: Options) {
   await cli.releases.new(release)
 
   // delete previous artifacts in the release
-  cleanArtifacts && await cli.execute(
-    ['releases', 'files', release, 'delete', '--all'],
-    true,
-  )
+  if (cleanArtifacts) {
+    await cli.execute(
+      ['releases', 'files', release, 'delete', '--all'],
+      true,
+    )
+  }
 
   // upload sourcemap
-  if(sourcemap?.include.length) {
+  if (sourcemap?.include.length) {
     await cli.releases.uploadSourceMaps(release, sourcemap)
   }
 
   // set commits
   const shouldCommit = commits?.auto || (commits?.repo && commits?.commit)
-  shouldCommit && await cli.releases.setCommits(release, commits!)
+  if (shouldCommit) {
+    await cli.releases.setCommits(release, commits!)
+  }
 
   // finalize release
-  finalize && await cli.releases.finalize(release)
+  if (finalize) {
+    await cli.releases.finalize(release)
+  }
 
   // set delploy
-  // @ts-ignore
-  await cli.releases.newDeploy(release, deploy)
+  await cli.releases.newDeploy(release, deploy as Required<DeployOptions>)
 
   // delete sourcemap after all is done
   // support `include: string[]` only
-  if(cleanLocal && sourcemap?.include.length) {
-    if(sourcemap.include.some(dir => typeof dir !== 'string')) {
+  if (cleanLocal && sourcemap?.include.length) {
+    if (sourcemap.include.some(dir => typeof dir !== 'string')) {
       throw new Error(`[UnpluginSentry]: When using "cleanLocal", the "include" must be an array of string.`)
     }
     const sourmapGlobs = (sourcemap.include as string[]).map(
@@ -52,7 +59,9 @@ export async function publishProject(options: Options) {
         path.resolve(process.cwd(), dir, './**/*.css.map'),
       ],
     ).flat()
-    !silent && logger.log(`Cleaning local sourcemap\n  🧹${sourmapGlobs.join('\n  🧹')}`)
+    if (!silent) {
+      logger.log(`Cleaning local sourcemap\n  🧹${sourmapGlobs.join('\n  🧹')}`)
+    }
     await rimraf(sourmapGlobs, { glob: true })
   }
 }
@@ -102,8 +111,8 @@ class DrySentryCli {
   }
 
   debug(label: string, data?: any) {
-    if(this.options?.silent) {
-      return 
+    if (this.options?.silent) {
+      return
     }
     if (data !== undefined) {
       logger.log(
@@ -114,8 +123,7 @@ class DrySentryCli {
           true,
         )}`,
       )
-    }
-    else {
+    } else {
       logger.log(label)
     }
   }
@@ -125,13 +133,13 @@ class DrySentryCli {
  * Get release version
  */
 export async function getRelease(options: Options): Promise<string> {
-  if(options.release) {
+  if (options.release) {
     return options.release.trim()
   } else {
     const cli = getSentryCli(options)
     const proposedRelease = await cli.releases.proposeVersion()
-    return options.shortRelease 
-      ? proposedRelease.slice(0, 8) 
+    return options.shortRelease
+      ? proposedRelease.slice(0, 8)
       : proposedRelease
   }
 }
@@ -140,7 +148,7 @@ export async function getRelease(options: Options): Promise<string> {
  * Get a sentry-cli instance.
  */
 function getSentryCli(options: Options): SentryCli {
-  return options.dryRun 
+  return options.dryRun
     ? new DrySentryCli(options.configFile, options)
     : new SentryCli(options.configFile, options)
 }
