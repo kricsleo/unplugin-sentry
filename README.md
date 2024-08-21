@@ -68,7 +68,6 @@ Example: [`playground/rollup`](./playground/rollup)
 
 <br></details>
 
-
 <details>
 <summary>Webpack</summary><br>
 
@@ -132,7 +131,7 @@ I don't use esbuild for now, so it haven't been tested in esbuild yet.
 
 ## Runtime Support
 
-Besides uploading sourcemap to Sentry and other publishing works, this plugin also injects a virtual module named `virtual-unplugin-sentry-runtime` into your project. 
+Besides uploading sourcemap to Sentry and other publishing works, this plugin also injects a virtual module named `virtual-unplugin-sentry-runtime` into your project.
 
 It provides some useful meta info when initing Sentry at runtime. For example, when you call `Sentry.init({/** options **/})`, the `environment` and `release` options must match the one you use when uploading sourcemap. So that when debugging the issue in Sentry, the sourcemap can be correctly mapped.
 
@@ -170,7 +169,7 @@ Extends from [@sentry/cli - SentryCliOptions](https://github.com/getsentry/sentr
 | org             | `string`  | ❌       | -     | Organization slug. <br > This value will update `SENTRY_ORG` env variable.                                                                                                     |
 | project         | `string`  | ❌       | -     | Project Project slug. <br > This value will update `SENTRY_PROJECT` env variable.                                                                                                 |
 | authToken       | `string`  | ❌       | -     | Authentication token for API, interchangeable with apiKey. <br > This value will update `SENTRY_AUTH_TOKEN` env variable.                                                            |
-| publish         | `boolean` | ❌       | `false` | If publish project to Sentry.<br > Means to upload soucemap files and release the version to Sentry server.<br > You might want to turn it on only when deploying projects other than locally developing.  
+| publish         | `boolean` | ❌       | `false` | If publish project to Sentry.<br > Means to upload soucemap files and release the version to Sentry server.<br > You might want to turn it on only when deploying projects other than locally developing.
 | release         | `string`  | ❌       | -     | Release version.<br > Automatically generated from commit hash value if not provided.                                         |
 | shortRelease    | `boolean` | ❌       | `true`  | If use short commit hash for automatically generated release version.                                                  |
 | cleanLocal      | `boolean` | ❌       | `true`  | If remove local sourcemap files (`*.js.map` & `*.css.map`) after the publish.                                                                     |
@@ -227,7 +226,6 @@ Extends from [@sentry/cli - SentryCliCommitsOptions](https://github.com/getsentr
 | previousCommit  | `string`  | ❌       | -     | The commit before the beginning of this release. <br > If omitted, this will default to the last commit of the previous release in Sentry. <br > If there was no previous release, the last 10 commits will be used.                                                                |
 | ignoreMissing   | `boolean` | ❌       | -     | When the flag is set and the previous release commit was not found in the repository, will create a release. <br > with the default commits count(or the one specified with `--initial-depth`) instead of failing the command.     |
 | ignoreEmpty     | `boolean` | ❌       | -     | When the flag is set, command will not fail and just exit silently if no new commits for a given release are found.|
-
 
 ## License
 

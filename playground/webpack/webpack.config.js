@@ -1,4 +1,4 @@
-const path = require('path');
+const path = require('node:path')
 const unpluginSentry = require('../../dist/webpack.cjs').default
 
 module.exports = {
@@ -22,9 +22,9 @@ module.exports = {
     rules: [
       {
         test: /\.css$/i,
-        use: ["css-loader"],
+        use: ['css-loader'],
       },
     ],
   },
   stats: 'errors-only',
-};
+}

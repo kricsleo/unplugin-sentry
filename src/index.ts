@@ -1,6 +1,7 @@
 import { createUnplugin } from 'unplugin'
+import type { UnpluginFactory } from 'unplugin'
 import type { Options } from './types'
-import { defaults, resolveRollupConfig, resolveViteConfig, resovleWebpackConfig, logger } from './resolvers'
+import { defaults, resolveRollupConfig, resolveViteConfig, resovleWebpackConfig } from './resolvers'
 import { getVirtualContent, resolvedVirtualModuleId, virtualModuleId } from './virtual-module'
 import { getRelease, publishProject } from './sentry'
 
@@ -13,16 +14,16 @@ const defaultOptions: Partial<Options> = {
   shortRelease: true,
 }
 
-export default createUnplugin<Options | undefined>((options) => {
+export const unpluginFactory: UnpluginFactory<Options | undefined> = options => {
   const opts = Object.assign({}, defaultOptions, options)
   const resolveOptsPromise = getRelease(opts)
     .then(release => defaults(opts, { release }))
-  
+
   return {
     name: 'unplugin-sentry',
     enforce: 'post',
     resolveId(id) {
-      return id === virtualModuleId 
+      return id === virtualModuleId
         ? resolvedVirtualModuleId
         : null
     },
@@ -40,7 +41,7 @@ export default createUnplugin<Options | undefined>((options) => {
       }
     },
     async writeBundle() {
-      if(!opts.publish) {
+      if (!opts.publish) {
         return
       }
       await resolveOptsPromise
@@ -50,5 +51,7 @@ export default createUnplugin<Options | undefined>((options) => {
     rollup: resolveRollupConfig(opts),
     webpack: resovleWebpackConfig(opts),
   }
-})
+}
 
+export const unplugin = /* #__PURE__ */ createUnplugin(unpluginFactory)
+export default unplugin
