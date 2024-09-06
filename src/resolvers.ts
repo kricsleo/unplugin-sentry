@@ -1,5 +1,5 @@
 import process from 'node:process'
-import { normalize } from 'node:path'
+import path from 'node:path'
 import type { UnpluginOptions } from 'unplugin'
 import chalk from 'chalk'
 import type { Options } from './types'
@@ -32,8 +32,8 @@ export function resolveViteConfig(options: Options): UnpluginOptions['vite'] {
       defaults(options, {
         deploy: { env: mode || process.env.NODE_ENV },
         sourcemap: {
-          include: [normalize(`./${build.outDir}/${build.assetsDir}`)],
-          urlPrefix: normalize(`~/${env.BASE_URL}/${build.assetsDir}/`),
+          include: [path.resolve(build.outDir, build.assetsDir)],
+          urlPrefix: path.normalize(`~/${env.BASE_URL}/${build.assetsDir}/`),
         },
       })
     },
@@ -78,15 +78,15 @@ export function resovleWebpackConfig(options: Options): UnpluginOptions['webpack
       }
     }
 
-    const { publicPath, path } = compiler.options.output
+    const { publicPath, path: _path } = compiler.options.output
     // publicPath: 'auto' - https://webpack.js.org/guides/public-path/#automatic-publicpath
     const urlPrefix = !publicPath || publicPath === 'auto'
       ? undefined
-      : normalize(`~/${publicPath}`)
+      : path.normalize(`~/${publicPath}`)
     defaults(options, {
       deploy: { env: compiler.options.mode || process.env.NODE_ENV },
       sourcemap: {
-        include: path ? [path] : [],
+        include: _path ? [_path] : [],
         urlPrefix,
       },
     })
